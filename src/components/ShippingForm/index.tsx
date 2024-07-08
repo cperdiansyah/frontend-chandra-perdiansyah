@@ -1,4 +1,4 @@
-import { Country } from '@/lib/type';
+import { Country, Harbor } from '@/lib/type';
 import api, { API_URL } from '@/services/api';
 import { Form, Select } from 'antd';
 import { AxiosError } from 'axios';
@@ -9,10 +9,13 @@ const ShippingForm: React.FC = () => {
   const [formValue, setFormValue] = useState<FormValue>({
     negara: [],
     pelabuhan: [],
+    barang:[]
   });
   const [selectedFormValue, setSelectedFormValue] = useState<SelectedFormValue>(
     {
-      negara: 0,
+      negara: '',
+      pelabuhan: '',
+      barang: '',
     }
   );
 
@@ -21,7 +24,7 @@ const ShippingForm: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedFormValue.negara) getHarbor(selectedFormValue.negara);
+    if (selectedFormValue.negara !== '') getHarbor(selectedFormValue.negara);
   }, [selectedFormValue]);
 
   /* Get Fetching */
@@ -41,17 +44,16 @@ const ShippingForm: React.FC = () => {
     }
   };
 
-  const getHarbor = async (params: string | number) => {
+  const getHarbor = async (countryId: string | number) => {
     try {
       const resHarbor = await api.get(
-        `${API_URL.pelabuhan}?filter={"where":{"id_negara":${selectedFormValue.negara}}}`
+        `${API_URL.pelabuhan}?filter={"where":{"id_negara":${countryId}}}`
       );
-      const dataHarbor = resHarbor.data;
-      console.log(dataHarbor);
-      /* const dataHarbor = resHarbor.data.map((country: Country) => ({
-        value: country.id_negara,
-        label: `${country.kode_negara} - ${country.nama_negara}`,
-      })); */
+
+      const dataHarbor = resHarbor.data.map((harbor: Harbor) => ({
+        value: harbor.id_pelabuhan,
+        label: harbor.nama_pelabuhan,
+      }));
       setFormValue((state) => ({
         ...state,
         pelabuhan: dataHarbor,
@@ -62,9 +64,10 @@ const ShippingForm: React.FC = () => {
   };
   /* End Get Fetching */
 
-  const onSelectedCountry = async (value: number) => {
-    setSelectedFormValue((state) => ({ ...state, negara: value }));
+  const onSelectedForm = (key: keyof SelectedFormValue, value: string) => {
+    setSelectedFormValue((state) => ({ ...state, [key]: `${value}` }));
   };
+
   return (
     <Form
       name="basic"
@@ -85,7 +88,7 @@ const ShippingForm: React.FC = () => {
           showSearch
           placeholder="Select a Country"
           optionFilterProp="label"
-          onChange={onSelectedCountry}
+          onChange={(val) => onSelectedForm('negara', val)}
           options={formValue.negara}
         />
       </Form.Item>
@@ -99,19 +102,26 @@ const ShippingForm: React.FC = () => {
           showSearch
           placeholder="Select a Harbor"
           optionFilterProp="label"
-          onChange={onSelectedCountry}
-          options={formValue.negara}
-          disabled={selectedFormValue.negara === 0}
+          onChange={(val) => onSelectedForm('pelabuhan', val)}
+          options={formValue.pelabuhan}
+          disabled={selectedFormValue.negara === ''}
         />
       </Form.Item>
 
-      {/* <Form.Item<FieldType>
-        label="Password"
-        name="password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
+      <Form.Item<FieldType>
+        label="Barang"
+        name="barang"
+        rules={[{ required: true }]}
       >
-        <Input.Password />
-      </Form.Item> */}
+        <Select
+          showSearch
+          placeholder="Select a Harbor"
+          optionFilterProp="label"
+          onChange={(val) => onSelectedForm('pelabuhan', val)}
+          options={formValue.barang}
+          disabled={selectedFormValue.pelabuhan === ''}
+        />
+      </Form.Item>
     </Form>
   );
 };
