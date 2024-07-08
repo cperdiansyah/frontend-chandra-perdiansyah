@@ -1,10 +1,10 @@
 import Layout from '@/components/Layouts';
+import ShippingForm from '@/components/ShippingForm';
 
 const Home = () => {
   return (
     <Layout>
-      <h1 className="text-3xl font-bold">Welcome to My Website</h1>
-      <p>This is the content of the main page.</p>
+      <ShippingForm />
     </Layout>
   );
 };
