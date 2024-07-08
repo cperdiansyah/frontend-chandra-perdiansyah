@@ -14,7 +14,6 @@ const ThemeSwitcher = () => {
   ];
 
   const handleThemeSwitch: MenuProps['onClick'] = ({ key }) => {
-    console.log(key);
     localStorage.setItem('theme', key);
     if (key === 'light') {
       document.body.classList.remove('dark');
