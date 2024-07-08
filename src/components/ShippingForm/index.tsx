@@ -131,9 +131,7 @@ const ShippingForm: React.FC = () => {
       barang: ['barangDetail', 'discount', 'harga', 'total'],
     };
 
-    form.setFieldsValue(
-      Object.fromEntries(resetFields[key].map((field) => [field, '']))
-    );
+    form.resetFields(resetFields[key]);
     setSelectedFormValue((state) => ({
       ...state,
       pelabuhan: key === 'negara' ? '' : state.pelabuhan,
@@ -215,7 +213,7 @@ harga : ${formatCurrency(Number(selectedProduct?.harga) || 0)}`,
       >
         <Select
           showSearch
-          placeholder="Select a Harbor"
+          placeholder="Select a Product"
           optionFilterProp="label"
           onChange={(val) => onSelectedForm('barang', val)}
           options={formValue.formData.barang}
@@ -243,21 +241,33 @@ harga : ${formatCurrency(Number(selectedProduct?.harga) || 0)}`,
         name="discount"
         rules={[{ required: true }]}
       >
-        <Input readOnly disabled={selectedFormValue.barang === ''} />
+        <Input
+          readOnly
+          disabled={selectedFormValue.barang === ''}
+          placeholder="Discount"
+        />
       </Form.Item>
       <Form.Item<FieldType>
         label="Harga"
         name="harga"
         rules={[{ required: true }]}
       >
-        <Input readOnly disabled={selectedFormValue.barang === ''} />
+        <Input
+          readOnly
+          disabled={selectedFormValue.barang === ''}
+          placeholder="Price"
+        />
       </Form.Item>
       <Form.Item<FieldType>
         label="Total"
         name="total"
         rules={[{ required: true }]}
       >
-        <Input readOnly disabled={selectedFormValue.barang === ''} />
+        <Input
+          readOnly
+          disabled={selectedFormValue.barang === ''}
+          placeholder="Total"
+        />
       </Form.Item>
       <div className="text-xs text-gray-500 text-center">
         Note : 4 field diatas read only, diambil dari response API
