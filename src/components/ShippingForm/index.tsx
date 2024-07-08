@@ -5,7 +5,7 @@ import { useForm } from 'antd/es/form/Form';
 import { AxiosError } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { FieldType, FormValue, SelectedFormValue } from './type.index';
-import { formatCurrency, getTotalPriceWithDiscrount } from '@/utils/helpers';
+import { formatCurrency, getTotalPriceWithDiscount } from '@/utils/helpers';
 
 const { TextArea } = Input;
 
@@ -118,23 +118,42 @@ const ShippingForm: React.FC = () => {
   /* End Get Fetching */
 
   const onSelectedForm = (key: keyof SelectedFormValue, value: string) => {
-    setSelectedFormValue((state) => ({ ...state, [key]: `${value}` }));
+    const resetFields = {
+      negara: [
+        'barangDetail',
+        'discount',
+        'harga',
+        'total',
+        'pelabuhan',
+        'barang',
+      ],
+      pelabuhan: ['barang', 'barangDetail', 'discount', 'harga', 'total'],
+      barang: ['barangDetail', 'discount', 'harga', 'total'],
+    };
+
+    form.setFieldsValue(
+      Object.fromEntries(resetFields[key].map((field) => [field, '']))
+    );
+    setSelectedFormValue((state) => ({
+      ...state,
+      pelabuhan: key === 'negara' ? '' : state.pelabuhan,
+      barang: key === 'barang' ? state.barang : '',
+      [key]: value,
+    }));
 
     if (key === 'barang') {
       const selectedProduct = formValue.originalData.barang.find(
         (item) => `${item.id_barang}` === `${value}`
       );
-
-      /* s */
       form.setFieldsValue({
         barangDetail: `id barang: ${selectedProduct?.id_barang}
-  nama barang : ${selectedProduct?.nama_barang}
-  description : ${selectedProduct?.description}
-  diskon : ${selectedProduct?.diskon}%
-  harga : ${formatCurrency(Number(selectedProduct?.harga) || 0)}`,
+nama barang : ${selectedProduct?.nama_barang}
+description : ${selectedProduct?.description}
+diskon : ${selectedProduct?.diskon}%
+harga : ${formatCurrency(Number(selectedProduct?.harga) || 0)}`,
         discount: `${selectedProduct?.diskon}%`,
         harga: `Rp.${formatCurrency(Number(selectedProduct?.harga) || 0)}`,
-        total: `Rp.${getTotalPriceWithDiscrount(
+        total: `Rp.${getTotalPriceWithDiscount(
           Number(selectedProduct?.harga || 0),
           Number(selectedProduct?.diskon || 0)
         )}`,
@@ -179,7 +198,7 @@ const ShippingForm: React.FC = () => {
           optionFilterProp="label"
           onChange={(val) => onSelectedForm('pelabuhan', val)}
           options={formValue.formData.pelabuhan}
-          // disabled={selectedFormValue.negara === ''}
+          disabled={selectedFormValue.negara === ''}
           onFocus={() => getHarbor(selectedFormValue.negara)}
         />
       </Form.Item>
@@ -195,38 +214,45 @@ const ShippingForm: React.FC = () => {
           optionFilterProp="label"
           onChange={(val) => onSelectedForm('barang', val)}
           options={formValue.formData.barang}
-          // disabled={selectedFormValue.pelabuhan === ''}
+          disabled={selectedFormValue.pelabuhan === ''}
           onFocus={() => getProduct(selectedFormValue.pelabuhan)}
         />
       </Form.Item>
+
+      {/* Read only section */}
       <Form.Item<FieldType>
         label="Informasi Barang"
         name="barangDetail"
         rules={[{ required: true }]}
       >
-        <TextArea rows={5} placeholder="Product Information" readOnly />
+        <TextArea
+          rows={5}
+          placeholder="Product Information"
+          readOnly
+          disabled={selectedFormValue.barang === ''}
+        />
       </Form.Item>
 
       <Form.Item<FieldType>
-        label="harga"
+        label="Discount"
         name="discount"
         rules={[{ required: true }]}
       >
-        <Input readOnly />
+        <Input readOnly disabled={selectedFormValue.barang === ''} />
       </Form.Item>
       <Form.Item<FieldType>
         label="Harga"
         name="harga"
         rules={[{ required: true }]}
       >
-        <Input readOnly />
+        <Input readOnly disabled={selectedFormValue.barang === ''} />
       </Form.Item>
       <Form.Item<FieldType>
         label="Total"
         name="total"
         rules={[{ required: true }]}
       >
-        <Input readOnly />
+        <Input readOnly disabled={selectedFormValue.barang === ''} />
       </Form.Item>
     </Form>
   );
