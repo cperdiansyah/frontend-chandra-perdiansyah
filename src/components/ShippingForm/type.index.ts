@@ -1,4 +1,4 @@
-import { Country } from '@/lib/type';
+import { Country, Product, SelectOptionValue } from '@/lib/type';
 import { Harbor } from '../../lib/type';
 
 export type FieldType = {
@@ -8,12 +8,20 @@ export type FieldType = {
   discount?: string;
   harga?: string;
   total?: string;
+  barangDetail?: string;
 };
 
 export type FormValue = {
-  negara: Country[];
-  pelabuhan: Harbor[];
-  barang: any;
+  originalData: {
+    negara: Country[];
+    pelabuhan: Harbor[];
+    barang: Product[];
+  };
+  formData: {
+    negara: SelectOptionValue[];
+    pelabuhan: SelectOptionValue[];
+    barang: SelectOptionValue[];
+  };
 };
 
 export type SelectedFormValue = {

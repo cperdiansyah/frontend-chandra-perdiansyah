@@ -13,3 +13,12 @@ export type Harbor = {
   nama_pelabuhan: string;
   id_negara: string;
 };
+
+export type Product = {
+  id_barang: number;
+  nama_barang: string;
+  id_pelabuhan: number;
+  description: string;
+  diskon: number;
+  harga: number;
+};

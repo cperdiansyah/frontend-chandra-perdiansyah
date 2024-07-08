@@ -8,9 +8,9 @@ const api = axios.create({
 });
 
 export const API_URL = {
-  negara: 'negaras',
-  pelabuhan: 'pelabuhans',
-  barang: 'barangs',
+  NEGARA: 'negaras',
+  PELABUHAN: 'pelabuhans',
+  BARANG: 'barangs',
 };
 
 export default api;
