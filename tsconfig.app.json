@@ -26,5 +26,9 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "files.associations": {
+    "*.scss": "tailwindcss",
+    "*.css": "tailwindcss"
+  }
 }

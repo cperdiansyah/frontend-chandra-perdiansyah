@@ -152,8 +152,8 @@ description : ${selectedProduct?.description}
 diskon : ${selectedProduct?.diskon}%
 harga : ${formatCurrency(Number(selectedProduct?.harga) || 0)}`,
         discount: `${selectedProduct?.diskon}%`,
-        harga: `Rp.${formatCurrency(Number(selectedProduct?.harga) || 0)}`,
-        total: `Rp.${getTotalPriceWithDiscount(
+        harga: `Rp. ${formatCurrency(Number(selectedProduct?.harga) || 0)}`,
+        total: `Rp. ${getTotalPriceWithDiscount(
           Number(selectedProduct?.harga || 0),
           Number(selectedProduct?.diskon || 0)
         )}`,
@@ -172,7 +172,11 @@ harga : ${formatCurrency(Number(selectedProduct?.harga) || 0)}`,
       autoComplete="off"
       layout="horizontal"
       title="Shipping Form"
+      className="mx-auto"
     >
+      <h3 className="h3 text-center text-xl font-medium text-gray-700 mb-5 dark:text-gray-200">
+        Take Home Test PT Aman Tekno Solusi
+      </h3>
       <Form.Item<FieldType>
         label="Negara"
         name="negara"
@@ -184,6 +188,7 @@ harga : ${formatCurrency(Number(selectedProduct?.harga) || 0)}`,
           optionFilterProp="label"
           onChange={(val) => onSelectedForm('negara', val)}
           options={formValue.formData.negara}
+          className=""
         />
       </Form.Item>
 
@@ -254,6 +259,9 @@ harga : ${formatCurrency(Number(selectedProduct?.harga) || 0)}`,
       >
         <Input readOnly disabled={selectedFormValue.barang === ''} />
       </Form.Item>
+      <div className="text-xs text-gray-500 text-center">
+        Note : 4 field diatas read only, diambil dari response API
+      </div>
     </Form>
   );
 };
